@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+    body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+  margin-bottom: 20px;
+}
+
+.cell {
+  width: 100px;
+  height: 100px;
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.game-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+#turn {
+  font-weight: bold;
+}
+
+#restart {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #4caf50;
+  color: #fff;
+  cursor: pointer;
+}
+</style>
+<body>
+  <div class="container">
+    <h1>Tic Tac Toe</h1>
+    <div class="game-board">
+      <div class="cell" data-cell></div>
+      <div class="cell" data-cell></div>
+      <div class="cell" data-cell></div>
+      <div class="cell" data-cell></div>
+      <div class="cell" data-cell></div>
+      <div class="cell" data-cell></div>
+      <div class="cell" data-cell></div>
+      <div class="cell" data-cell></div>
+      <div class="cell" data-cell></div>
+    </div>
+    <div class="game-info">
+      <div id="turn">Player X's turn</div>
+      <button id="restart">Restart</button>
+    </div>
+  </div>
+
+ <script>
+    const cells = document.querySelectorAll('.cell');
+const turnDisplay = document.getElementById('turn');
+const restartBtn = document.getElementById('restart');
+
+let currentPlayer = 'X';
+let gameOver = false;
+let board = ['', '', '', '', '', '', '', '', ''];
+
+cells.forEach((cell, index) => {
+  cell.addEventListener('click', () => {
+    if (!gameOver && board[index] === '') {
+      cell.textContent = currentPlayer;
+      board[index] = currentPlayer;
+      checkWin();
+      changePlayer();
+    }
+  });
+});
+
+function changePlayer() {
+  currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+  turnDisplay.textContent = `Player ${currentPlayer}'s turn`;
+}
+
+function checkWin() {
+  const winningCombinations = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+    [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+    [0, 4, 8], [2, 4, 6] // Diagonals
+  ];
+
+  for (let combo of winningCombinations) {
+    const [a, b, c] = combo;
+    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+      gameOver = true;
+      turnDisplay.textContent = `Player ${currentPlayer} wins!`;
+      return;
+    }
+  }
+
+  if (!board.includes('')) {
+    gameOver = true;
+    turnDisplay.textContent = 'It\'s a tie!';
+  }
+}
+
+restartBtn.addEventListener('click', () => {
+  gameOver = false;
+  currentPlayer = 'X';
+  board = ['', '', '', '', '', '', '', '', ''];
+  cells.forEach(cell => cell.textContent = '');
+  turnDisplay.textContent = "Player X's turn";
+});
+ </script>
+</body>
+</html>
